@@ -21,7 +21,7 @@ export default async function AdminSettingsPage() {
     );
   }
 
-  const language = detectInitialLanguage();
+  const language = await detectInitialLanguage();
 
   return (
     <div className="space-y-6">

@@ -1,0 +1,20 @@
+{
+  "node": {
+    "006e87d2ba50d7749061e0234a2c5ee819ab969621": {
+      "workers": {
+        "app/(public)/page": {
+          "moduleId": "32969",
+          "async": false,
+          "exportedName": "signOutAction",
+          "filename": "app/(auth)/logout/actions.ts"
+        }
+      },
+      "layer": {
+        "app/(public)/page": "rsc"
+      },
+      "exportedName": "signOutAction",
+      "filename": "app/(auth)/logout/actions.ts"
+    }
+  },
+  "edge": {}
+}

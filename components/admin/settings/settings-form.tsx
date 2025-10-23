@@ -8,7 +8,8 @@ import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { updateSiteSettingsAction, initialSiteSettingsActionState } from '@/app/(admin)/admin/settings/actions';
+import { updateSiteSettingsAction } from '@/app/(admin)/admin/settings/actions';
+import { initialSiteSettingsActionState } from '@/app/(admin)/admin/settings/action-state';
 import type { SiteSettings } from '@/lib/data/settings';
 
 type SettingsFormProps = {

@@ -15,7 +15,7 @@ type AdminPrayerDetailPageProps = {
 };
 
 export default async function AdminPrayerDetailPage({ params }: AdminPrayerDetailPageProps) {
-  const language = detectInitialLanguage();
+  const language = await detectInitialLanguage();
 
   const prayer = await getPrayerById(params.id);
 

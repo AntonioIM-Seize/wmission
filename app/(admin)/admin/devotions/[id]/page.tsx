@@ -15,7 +15,7 @@ type AdminDevotionDetailPageProps = {
 };
 
 export default async function AdminDevotionDetailPage({ params }: AdminDevotionDetailPageProps) {
-  const language = detectInitialLanguage();
+  const language = await detectInitialLanguage();
 
   const devotion = await getDevotionById(params.id);
 

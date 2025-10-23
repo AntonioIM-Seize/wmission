@@ -10,7 +10,7 @@ import { formatDate } from '@/lib/utils/date';
 
 export default async function AdminOverviewPage() {
   const metrics = await getAdminOverview();
-  const language = detectInitialLanguage();
+  const language = await detectInitialLanguage();
 
   const totalUsers = metrics.totalUsers || 1;
   const statusBreakdown = [

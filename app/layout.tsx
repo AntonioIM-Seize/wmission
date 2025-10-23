@@ -22,12 +22,12 @@ export const metadata: Metadata = {
   description: '선교지 소식과 기도 제목을 나누고 함께 기도하는 온라인 공동체',
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const initialLanguage = detectInitialLanguage();
+  const initialLanguage = await detectInitialLanguage();
 
   return (
     <html lang={initialLanguage}>

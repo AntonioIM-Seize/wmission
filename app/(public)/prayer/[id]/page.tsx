@@ -70,7 +70,7 @@ export async function generateMetadata({ params }: PrayerDetailPageProps): Promi
 }
 
 export default async function PrayerDetailPage({ params }: PrayerDetailPageProps) {
-  const language = detectInitialLanguage();
+  const language = await detectInitialLanguage();
   const profile = await getCurrentProfile();
 
   const prayer = await getPrayerById(params.id);

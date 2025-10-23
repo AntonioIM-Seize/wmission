@@ -31,7 +31,7 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const language = detectInitialLanguage();
+  const language = await detectInitialLanguage();
 
   const { settings, devotions, prayers } = await getHomeData();
 

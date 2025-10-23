@@ -1,0 +1,35 @@
+{
+  "node": {
+    "40a6ddfcdd11f727e42365af7ec5ff30f1e2584986": {
+      "workers": {
+        "app/(admin)/admin/users/page": {
+          "moduleId": "81259",
+          "async": false,
+          "exportedName": "updateUserStatusAction",
+          "filename": "app/(admin)/admin/users/actions.ts"
+        }
+      },
+      "layer": {
+        "app/(admin)/admin/users/page": "rsc"
+      },
+      "exportedName": "updateUserStatusAction",
+      "filename": "app/(admin)/admin/users/actions.ts"
+    },
+    "40fe0ad3bb8010fd0d58702cb81e5fb7100678dae9": {
+      "workers": {
+        "app/(admin)/admin/users/page": {
+          "moduleId": "81259",
+          "async": false,
+          "exportedName": "updateUserRoleAction",
+          "filename": "app/(admin)/admin/users/actions.ts"
+        }
+      },
+      "layer": {
+        "app/(admin)/admin/users/page": "rsc"
+      },
+      "exportedName": "updateUserRoleAction",
+      "filename": "app/(admin)/admin/users/actions.ts"
+    }
+  },
+  "edge": {}
+}

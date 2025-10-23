@@ -27,7 +27,7 @@ export async function createDevotionAction(values: DevotionCreateValues): Promis
     };
   }
 
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
 
   const sanitizedBody = sanitizeHTML(parsed.data.body);
   const sanitizedScriptureText = sanitizeHTML(parsed.data.scriptureText);

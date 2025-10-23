@@ -62,7 +62,7 @@ export async function getDevotionsList(params: {
   filters?: DevotionListFilters;
 }): Promise<DevotionListResult> {
   const { page, pageSize } = params;
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
 
   const filters = params.filters ?? {};
   if (params.search && !filters.search) {
@@ -160,7 +160,7 @@ export type DevotionExportRow = {
 };
 
 export async function getDevotionsForExport(filters: DevotionListFilters = {}): Promise<DevotionExportRow[]> {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
 
   let query = supabase
     .from('devotions')
@@ -219,7 +219,7 @@ export async function getDevotionsForExport(filters: DevotionListFilters = {}): 
 }
 
 export async function getDevotionById(id: string): Promise<DevotionDetail | null> {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
 
   const { data, error } = (await supabase
     .from('devotions')
@@ -270,7 +270,7 @@ export async function getDevotionById(id: string): Promise<DevotionDetail | null
 }
 
 export async function incrementDevotionViewCount(id: string) {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
   const { error } = await supabase.rpc('increment_devotion_views', { devotion_id: id });
 
   if (error) {
@@ -293,7 +293,7 @@ export type DevotionAdminMetrics = {
 };
 
 export async function getDevotionAdminMetrics(): Promise<DevotionAdminMetrics> {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
 
   const now = new Date();
   const last30 = new Date(now);
@@ -358,7 +358,7 @@ export type DevotionMonthlySummaryRow = {
 };
 
 export async function getDevotionMonthlySummary(months = 6): Promise<DevotionMonthlySummaryRow[]> {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
 
   const since = new Date();
   since.setMonth(since.getMonth() - (months - 1));

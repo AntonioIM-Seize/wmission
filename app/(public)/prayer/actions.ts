@@ -30,7 +30,7 @@ export async function createPrayerAction(values: PrayerCreateValues): Promise<Pr
     };
   }
 
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
   const sanitizedContent = sanitizeHTML(parsed.data.content);
 
   const { data, error } = await supabase
@@ -79,7 +79,7 @@ export async function reactPrayerAction(payload: ReactionPayload): Promise<React
     };
   }
 
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
 
   const { error } = await supabase.from('prayer_reactions').insert({
     prayer_id: payload.prayerId,
@@ -132,7 +132,7 @@ export async function updatePrayerAction(values: PrayerUpdateValues): Promise<Up
     };
   }
 
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
 
   const { data: prayer, error } = await supabase
     .from('prayers')

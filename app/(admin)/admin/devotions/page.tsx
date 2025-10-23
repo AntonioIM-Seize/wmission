@@ -28,7 +28,7 @@ type AdminDevotionsPageProps = {
 };
 
 export default async function AdminDevotionsPage({ searchParams }: AdminDevotionsPageProps) {
-  const language = detectInitialLanguage();
+  const language = await detectInitialLanguage();
 
   const query = searchParams.q?.trim() ?? '';
   const page = Math.max(Number(searchParams.page ?? '1') || 1, 1);

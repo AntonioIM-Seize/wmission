@@ -24,7 +24,7 @@ export type SupporterFilter = {
 };
 
 export async function getSupporters(filter?: SupporterFilter) {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
 
   let builder = supabase
     .from('supporters')

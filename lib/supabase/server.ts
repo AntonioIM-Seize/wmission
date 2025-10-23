@@ -1,20 +1,10 @@
 import { cookies } from 'next/headers';
 import { createServerClient } from '@supabase/ssr';
+import type { SupabaseClient } from '@supabase/supabase-js';
 
 import type { Database } from '@/types/supabase';
 
-type CookieOptions = {
-  domain?: string;
-  expires?: Date;
-  httpOnly?: boolean;
-  maxAge?: number;
-  path?: string;
-  sameSite?: true | 'lax' | 'strict' | 'none';
-  secure?: boolean;
-  priority?: 'low' | 'medium' | 'high';
-};
-
-export function createSupabaseServerClient() {
+export async function createSupabaseServerClient(): Promise<SupabaseClient<Database, 'public'>> {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
@@ -22,19 +12,22 @@ export function createSupabaseServerClient() {
     throw new Error('Supabase 서버 클라이언트 초기화 실패: 환경 변수를 확인하세요.');
   }
 
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
 
-  return createServerClient<Database>(supabaseUrl, supabaseAnonKey, {
+  return (createServerClient<Database, 'public'>(supabaseUrl, supabaseAnonKey, {
     cookies: {
-      get(name: string) {
-        return cookieStore.get(name)?.value;
+      getAll() {
+        return cookieStore.getAll();
       },
-      set(name: string, value: string, options?: CookieOptions) {
-        cookieStore.set({ name, value, ...(options ?? {}) });
-      },
-      remove(name: string, options?: CookieOptions) {
-        cookieStore.delete({ name, ...(options ?? {}) });
+      setAll(cookiesToSet) {
+        cookiesToSet.forEach(({ name, value, options }) => {
+          cookieStore.set({
+            name,
+            value,
+            ...(options ?? {}),
+          });
+        });
       },
     },
-  });
+  }) as unknown) as SupabaseClient<Database, 'public'>;
 }

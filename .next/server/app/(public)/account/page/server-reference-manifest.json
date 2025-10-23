@@ -1,0 +1,35 @@
+{
+  "node": {
+    "006e87d2ba50d7749061e0234a2c5ee819ab969621": {
+      "workers": {
+        "app/(public)/account/page": {
+          "moduleId": "83521",
+          "async": false,
+          "exportedName": "signOutAction",
+          "filename": "app/(auth)/logout/actions.ts"
+        }
+      },
+      "layer": {
+        "app/(public)/account/page": "rsc"
+      },
+      "exportedName": "signOutAction",
+      "filename": "app/(auth)/logout/actions.ts"
+    },
+    "40786452cab13edafc11e622b0d3615307be8fc2cd": {
+      "workers": {
+        "app/(public)/account/page": {
+          "moduleId": "83521",
+          "async": false,
+          "exportedName": "updateProfileAction",
+          "filename": "app/(public)/account/actions.ts"
+        }
+      },
+      "layer": {
+        "app/(public)/account/page": "action-browser"
+      },
+      "exportedName": "updateProfileAction",
+      "filename": "app/(public)/account/actions.ts"
+    }
+  },
+  "edge": {}
+}

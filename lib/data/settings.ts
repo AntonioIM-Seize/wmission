@@ -18,7 +18,7 @@ export type SiteSettings = {
 };
 
 export async function getSiteSettings(): Promise<SiteSettings | null> {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
 
   const { data, error } = await supabase
     .from('site_settings')
@@ -50,7 +50,7 @@ export async function getSiteSettings(): Promise<SiteSettings | null> {
 }
 
 export async function getSiteSettingsRaw(): Promise<SiteSettingsRow | null> {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from('site_settings')
     .select('*')

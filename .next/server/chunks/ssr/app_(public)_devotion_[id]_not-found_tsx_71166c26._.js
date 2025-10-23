@@ -1,0 +1,3 @@
+module.exports=[4202,a=>{"use strict";a.s(["default",()=>e]);var b=a.i(7997),c=a.i(97647),d=a.i(43917);function e(){return(0,b.jsxs)("div",{className:"flex min-h-[40vh] flex-col items-center justify-center gap-4 text-center",children:[(0,b.jsx)("h2",{className:"text-2xl font-semibold",children:"묵상을 찾을 수 없습니다."}),(0,b.jsx)("p",{className:"text-sm text-muted-foreground",children:"삭제되었거나 접근 권한이 없는 글일 수 있습니다."}),(0,b.jsx)(d.Button,{asChild:!0,children:(0,b.jsx)(c.default,{href:"/devotion",children:"묵상 목록으로 돌아가기"})})]})}}];
+
+//# sourceMappingURL=app_%28public%29_devotion_%5Bid%5D_not-found_tsx_71166c26._.js.map

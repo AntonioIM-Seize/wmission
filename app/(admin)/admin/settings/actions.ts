@@ -1,4 +1,4 @@
-'use server';
+ 'use server';
 
 import { revalidatePath } from 'next/cache';
 
@@ -6,20 +6,15 @@ import { requireRole } from '@/lib/auth/session';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { siteSettingsSchema } from '@/lib/validators/settings';
 import { logError } from '@/lib/monitoring/logger';
-
-export type SiteSettingsActionState = {
-  status: 'idle' | 'success' | 'error';
-  message?: string;
-};
-
-export const initialSiteSettingsActionState: SiteSettingsActionState = {
-  status: 'idle',
-};
+import type { Database } from '@/types/supabase';
+import type { SiteSettingsActionState } from './action-state';
 
 export async function updateSiteSettingsAction(
   _prevState: SiteSettingsActionState | undefined,
   formData: FormData,
 ): Promise<SiteSettingsActionState> {
+  'use server';
+
   await requireRole('admin');
 
   const parsed = siteSettingsSchema.safeParse({
@@ -39,19 +34,21 @@ export async function updateSiteSettingsAction(
     };
   }
 
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
   const values = parsed.data;
+
+  const updatePayload = {
+    verse_ref: values.verseRef,
+    verse_text: values.verseText,
+    main_prayer: values.mainPrayer,
+    bank_name: values.bankName,
+    bank_account: values.bankAccount,
+    bank_holder: values.bankHolder,
+  } satisfies Database['public']['Tables']['site_settings']['Update'];
 
   const { error } = await supabase
     .from('site_settings')
-    .update({
-      verse_ref: values.verseRef,
-      verse_text: values.verseText,
-      main_prayer: values.mainPrayer,
-      bank_name: values.bankName,
-      bank_account: values.bankAccount,
-      bank_holder: values.bankHolder,
-    })
+    .update(updatePayload)
     .eq('id', values.id);
 
   if (error) {

@@ -1,0 +1,20 @@
+{
+  "node": {
+    "40328e69a8742da95755898822bad7c69b676d071a": {
+      "workers": {
+        "app/(admin)/admin/devotions/[id]/page": {
+          "moduleId": "59055",
+          "async": false,
+          "exportedName": "deleteDevotionAdminAction",
+          "filename": "app/(admin)/admin/devotions/actions.ts"
+        }
+      },
+      "layer": {
+        "app/(admin)/admin/devotions/[id]/page": "rsc"
+      },
+      "exportedName": "deleteDevotionAdminAction",
+      "filename": "app/(admin)/admin/devotions/actions.ts"
+    }
+  },
+  "edge": {}
+}

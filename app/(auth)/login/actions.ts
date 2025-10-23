@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation';
 import { loginSchema, type LoginFormValues } from '@/lib/validators/auth';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { isAdmin, isApproved } from '@/lib/auth/utils';
+import type { Database } from '@/types/supabase';
 
 type LoginActionInput = LoginFormValues & {
   redirectTo?: string | null;
@@ -15,6 +16,8 @@ type LoginActionError = {
   message: string;
   fieldErrors?: Partial<Record<keyof LoginFormValues, string[]>>;
 };
+
+type ProfileRow = Database['public']['Tables']['profiles']['Row'];
 
 function sanitizeRedirectPath(path?: string | null): string {
   if (!path) {
@@ -47,7 +50,7 @@ export async function loginAction(values: LoginActionInput): Promise<LoginAction
     };
   }
 
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase.auth.signInWithPassword({
     email: parsed.data.email,
     password: parsed.data.password,
@@ -74,7 +77,7 @@ export async function loginAction(values: LoginActionInput): Promise<LoginAction
     .from('profiles')
     .select('*')
     .eq('id', user.id)
-    .maybeSingle();
+    .maybeSingle<ProfileRow>();
 
   if (profileError || !profile) {
     console.error('프로필 조회 실패', profileError);
@@ -96,7 +99,7 @@ export async function loginAction(values: LoginActionInput): Promise<LoginAction
     .from('profiles')
     .update({
       last_login_at: new Date().toISOString(),
-    })
+    } satisfies Database['public']['Tables']['profiles']['Update'])
     .eq('id', profile.id);
 
   if (updateResult.error) {

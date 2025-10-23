@@ -1,0 +1,3 @@
+module.exports=[51508,a=>{"use strict";a.s(["LanguageSwitcher",()=>f]);var b=a.i(87924),c=a.i(72131),d=a.i(50540),e=a.i(8754);function f(){let{language:a,setLanguage:f}=(0,d.useLanguage)(),[g,h]=(0,c.useTransition)();return(0,b.jsxs)("label",{className:"flex items-center gap-2 text-sm font-medium",children:[(0,b.jsx)("span",{children:"언어"}),(0,b.jsx)("select",{className:"rounded border border-neutral-300 bg-background px-2 py-1 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-primary",value:a,onChange:a=>{let b=a.target.value;h(()=>f(b))},disabled:g,children:e.SUPPORTED_LANGUAGES.map(a=>(0,b.jsx)("option",{value:a,children:e.LANGUAGE_LABEL[a]},a))})]})}}];
+
+//# sourceMappingURL=components_language-switcher_tsx_19568f0c._.js.map

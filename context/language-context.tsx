@@ -3,7 +3,7 @@
 import { createContext, useCallback, useContext, useMemo, useState } from 'react';
 
 import { DEFAULT_LANGUAGE, LANGUAGE_LABEL, type SupportedLanguage } from '@/lib/i18n/config';
-import { LANGUAGE_COOKIE } from '@/lib/i18n/detect-language';
+import { LANGUAGE_COOKIE } from '@/lib/i18n/constants';
 
 type LanguageContextValue = {
   language: SupportedLanguage;

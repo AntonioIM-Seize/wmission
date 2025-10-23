@@ -1,9 +1,7 @@
-import { headers } from 'next/headers';
-import { cookies } from 'next/headers';
+import { cookies, headers } from 'next/headers';
 
 import { DEFAULT_LANGUAGE, SUPPORTED_LANGUAGES, type SupportedLanguage } from './config';
-
-const LANGUAGE_COOKIE_KEY = 'mission.lang';
+import { LANGUAGE_COOKIE } from './constants';
 
 export function getSupportedLanguage(locale?: string | null): SupportedLanguage {
   if (!locale) {
@@ -14,34 +12,52 @@ export function getSupportedLanguage(locale?: string | null): SupportedLanguage 
   return (SUPPORTED_LANGUAGES.find((lang) => lang === normalized) ?? DEFAULT_LANGUAGE) as SupportedLanguage;
 }
 
-export function detectInitialLanguage(): SupportedLanguage {
-  const cookieStore = cookies();
-  const cookieLang = cookieStore.get(LANGUAGE_COOKIE_KEY)?.value;
-  if (cookieLang) {
-    return getSupportedLanguage(cookieLang);
+function detectFromClientContext(): SupportedLanguage | null {
+  if (typeof document !== 'undefined') {
+    const cookiesString = document.cookie;
+    if (cookiesString) {
+      const cookiePrefix = `${LANGUAGE_COOKIE}=`;
+      const match = cookiesString.split('; ').find((entry) => entry.startsWith(cookiePrefix));
+      if (match) {
+        const [, value] = match.split('=');
+        if (value) {
+          return getSupportedLanguage(decodeURIComponent(value));
+        }
+      }
+    }
   }
 
-  const headerStore = headers();
-  const acceptLanguage = headerStore.get('accept-language');
+  if (typeof navigator !== 'undefined' && navigator.language) {
+    return getSupportedLanguage(navigator.language);
+  }
 
-  if (acceptLanguage) {
-    const [first] = acceptLanguage.split(',');
-    if (first) {
-      return getSupportedLanguage(first);
+  return null;
+}
+
+export async function detectInitialLanguage(): Promise<SupportedLanguage> {
+  try {
+    const cookieStore = await cookies();
+    const cookieLang = cookieStore.get(LANGUAGE_COOKIE)?.value;
+    if (cookieLang) {
+      return getSupportedLanguage(cookieLang);
     }
+
+    const requestHeaders = await headers();
+    const acceptLanguage = requestHeaders.get('accept-language');
+    if (acceptLanguage) {
+      const [first] = acceptLanguage.split(',');
+      if (first) {
+        return getSupportedLanguage(first);
+      }
+    }
+  } catch {
+    // Ignored when there is no request context available (e.g. during build).
+  }
+
+  const clientDetected = detectFromClientContext();
+  if (clientDetected) {
+    return clientDetected;
   }
 
   return DEFAULT_LANGUAGE;
 }
-
-export function setLanguageCookie(language: SupportedLanguage) {
-  const cookieStore = cookies();
-  cookieStore.set({
-    name: LANGUAGE_COOKIE_KEY,
-    value: language,
-    path: '/',
-    maxAge: 60 * 60 * 24 * 365,
-  });
-}
-
-export const LANGUAGE_COOKIE = LANGUAGE_COOKIE_KEY;

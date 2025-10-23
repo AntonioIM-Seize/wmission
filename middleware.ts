@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { createMiddlewareClient } from '@supabase/ssr';
+import { createServerClient } from '@supabase/ssr';
 
 import { logWarn } from '@/lib/monitoring/logger';
 import type { Database } from '@/types/supabase';
@@ -16,7 +16,21 @@ export async function middleware(request: NextRequest) {
   }
 
   const response = NextResponse.next();
-  const supabase = createMiddlewareClient<Database>({ req: request, res: response });
+  const supabase = createServerClient<Database>(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return request.cookies.getAll()
+        },
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value, options }) => request.cookies.set(name, value))
+          cookiesToSet.forEach(({ name, value, options }) => response.cookies.set(name, value, options))
+        },
+      },
+    }
+  );
 
   const {
     data: { session },
@@ -38,7 +52,7 @@ export async function middleware(request: NextRequest) {
       .eq('id', session.user.id)
       .maybeSingle();
 
-    if (!profile || profile.role !== 'admin') {
+    if (!profile || (profile as any).role !== 'admin') {
       const redirectUrl = request.nextUrl.clone();
       redirectUrl.pathname = '/';
       redirectUrl.searchParams.delete('redirectTo');
@@ -60,7 +74,7 @@ export async function middleware(request: NextRequest) {
       .eq('id', session.user.id)
       .maybeSingle();
 
-    if (!profile || profile.status !== 'approved') {
+    if (!profile || (profile as any).status !== 'approved') {
       const redirectUrl = request.nextUrl.clone();
       redirectUrl.pathname = '/';
       redirectUrl.searchParams.set('notice', 'pending');

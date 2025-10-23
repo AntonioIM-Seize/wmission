@@ -1,0 +1,204 @@
+{
+  "version": 3,
+  "pages404": true,
+  "caseSensitive": false,
+  "basePath": "",
+  "redirects": [
+    {
+      "source": "/:path+/",
+      "destination": "/:path+",
+      "internal": true,
+      "statusCode": 308,
+      "regex": "^(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))/$"
+    }
+  ],
+  "headers": [],
+  "rewrites": {
+    "beforeFiles": [],
+    "afterFiles": [],
+    "fallback": []
+  },
+  "dynamicRoutes": [
+    {
+      "page": "/admin/devotions/[id]",
+      "regex": "^/admin/devotions/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/admin/devotions/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/admin/prayers/[id]",
+      "regex": "^/admin/prayers/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/admin/prayers/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/devotion/[id]",
+      "regex": "^/devotion/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/devotion/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/devotion/[id]/edit",
+      "regex": "^/devotion/([^/]+?)/edit(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/devotion/(?<nxtPid>[^/]+?)/edit(?:/)?$"
+    },
+    {
+      "page": "/prayer/[id]",
+      "regex": "^/prayer/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/prayer/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/prayer/[id]/edit",
+      "regex": "^/prayer/([^/]+?)/edit(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/prayer/(?<nxtPid>[^/]+?)/edit(?:/)?$"
+    }
+  ],
+  "staticRoutes": [
+    {
+      "page": "/",
+      "regex": "^/(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/(?:/)?$"
+    },
+    {
+      "page": "/_not-found",
+      "regex": "^/_not\\-found(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/_not\\-found(?:/)?$"
+    },
+    {
+      "page": "/account",
+      "regex": "^/account(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/account(?:/)?$"
+    },
+    {
+      "page": "/admin",
+      "regex": "^/admin(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin(?:/)?$"
+    },
+    {
+      "page": "/admin/devotions",
+      "regex": "^/admin/devotions(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/devotions(?:/)?$"
+    },
+    {
+      "page": "/admin/devotions/export",
+      "regex": "^/admin/devotions/export(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/devotions/export(?:/)?$"
+    },
+    {
+      "page": "/admin/prayers",
+      "regex": "^/admin/prayers(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/prayers(?:/)?$"
+    },
+    {
+      "page": "/admin/settings",
+      "regex": "^/admin/settings(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/settings(?:/)?$"
+    },
+    {
+      "page": "/admin/supporters",
+      "regex": "^/admin/supporters(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/supporters(?:/)?$"
+    },
+    {
+      "page": "/admin/supporters/export",
+      "regex": "^/admin/supporters/export(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/supporters/export(?:/)?$"
+    },
+    {
+      "page": "/admin/users",
+      "regex": "^/admin/users(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/users(?:/)?$"
+    },
+    {
+      "page": "/auth/callback",
+      "regex": "^/auth/callback(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/auth/callback(?:/)?$"
+    },
+    {
+      "page": "/devotion",
+      "regex": "^/devotion(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/devotion(?:/)?$"
+    },
+    {
+      "page": "/devotion/write",
+      "regex": "^/devotion/write(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/devotion/write(?:/)?$"
+    },
+    {
+      "page": "/favicon.ico",
+      "regex": "^/favicon\\.ico(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/favicon\\.ico(?:/)?$"
+    },
+    {
+      "page": "/login",
+      "regex": "^/login(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/login(?:/)?$"
+    },
+    {
+      "page": "/prayer",
+      "regex": "^/prayer(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/prayer(?:/)?$"
+    },
+    {
+      "page": "/register",
+      "regex": "^/register(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/register(?:/)?$"
+    },
+    {
+      "page": "/support",
+      "regex": "^/support(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/support(?:/)?$"
+    }
+  ],
+  "dataRoutes": [],
+  "rsc": {
+    "header": "rsc",
+    "varyHeader": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+    "prefetchHeader": "next-router-prefetch",
+    "didPostponeHeader": "x-nextjs-postponed",
+    "contentTypeHeader": "text/x-component",
+    "suffix": ".rsc",
+    "prefetchSuffix": ".prefetch.rsc",
+    "prefetchSegmentHeader": "next-router-segment-prefetch",
+    "prefetchSegmentSuffix": ".segment.rsc",
+    "prefetchSegmentDirSuffix": ".segments"
+  },
+  "rewriteHeaders": {
+    "pathHeader": "x-nextjs-rewritten-path",
+    "queryHeader": "x-nextjs-rewritten-query"
+  }
+}

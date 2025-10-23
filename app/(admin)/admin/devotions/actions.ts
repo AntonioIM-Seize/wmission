@@ -4,42 +4,47 @@ import { revalidatePath } from 'next/cache';
 
 import { requireRole } from '@/lib/auth/session';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
-import { removePublicStorageFile } from '@/lib/storage/utils';
 import { logError } from '@/lib/monitoring/logger';
+import { removePublicStorageFile } from '@/lib/storage/utils';
+import type { Database } from '@/types/supabase';
 
-type ActionResponse = void | { status: 'error'; message: string };
+type DevotionId = Database['public']['Tables']['devotions']['Row']['id'];
+type DevotionImageRow = Pick<Database['public']['Tables']['devotions']['Row'], 'id' | 'image_url'>;
 
-export async function deleteDevotionAdminAction(formData: FormData): Promise<ActionResponse> {
+export async function deleteDevotionAdminAction(formData: FormData): Promise<void> {
   await requireRole('admin');
 
   const devotionId = formData.get('devotionId');
 
   if (typeof devotionId !== 'string') {
-    return { status: 'error', message: '잘못된 요청입니다.' };
+    throw new Error('잘못된 요청입니다.');
   }
+  const parsedDevotionId: DevotionId = devotionId;
 
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
   const { data: devotion, error: fetchError } = await supabase
     .from('devotions')
-    .select('image_url')
-    .eq('id', devotionId)
-    .maybeSingle();
+    .select('id,image_url')
+    .match({ id: parsedDevotionId })
+    .maybeSingle<DevotionImageRow>();
 
   if (fetchError) {
     logError('관리자 묵상 삭제 전 조회 실패', { error: fetchError, devotionId });
   }
 
-  const { error } = await supabase.from('devotions').delete().eq('id', devotionId);
+  const { error } = await supabase.from('devotions').delete().match({ id: parsedDevotionId });
 
   if (error) {
     logError('관리자 묵상 삭제 실패', { error, devotionId });
-    return { status: 'error', message: '묵상을 삭제하지 못했습니다.' };
+    throw new Error('묵상을 삭제하지 못했습니다.');
   }
 
-  if (devotion?.image_url) {
-    await removePublicStorageFile(supabase, devotion.image_url);
+  const imageUrl = devotion?.image_url ?? null;
+
+  if (imageUrl) {
+    await removePublicStorageFile(supabase, imageUrl);
   }
 
   revalidatePath('/admin/devotions');
-  revalidatePath(`/admin/devotions/${devotionId}`);
+  revalidatePath(`/admin/devotions/${parsedDevotionId}`);
 }

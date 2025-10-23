@@ -25,7 +25,7 @@ export default async function AccountPage() {
   }
 
   const session = await getCurrentSession();
-  const language = detectInitialLanguage();
+  const language = await detectInitialLanguage();
 
   const membershipNotice: {
     title: string;

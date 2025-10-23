@@ -67,7 +67,7 @@ export async function getPrayers(params: {
   filters?: PrayerListFilters;
 }): Promise<PrayerListResult> {
   const { page, pageSize, filters } = params;
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
 
   const from = (page - 1) * pageSize;
   const to = from + pageSize - 1;
@@ -157,7 +157,7 @@ export async function getPrayers(params: {
 }
 
 export async function getPrayerById(id: string): Promise<PrayerDetail | null> {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
 
   const { data, error } = (await supabase
     .from('prayers')
@@ -224,7 +224,7 @@ export type PrayerAdminMetrics = {
 };
 
 export async function getPrayerAdminMetrics(): Promise<PrayerAdminMetrics> {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
 
   const [totalResult, answeredResult] = await Promise.all([
     supabase.from('prayers').select('id', { count: 'exact', head: true }),

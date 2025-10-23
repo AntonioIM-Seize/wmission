@@ -11,20 +11,10 @@ import { devotionUpdateSchema, type DevotionUpdateValues } from '@/lib/validator
 import { removePublicStorageFile } from '@/lib/storage/utils';
 import { logError } from '@/lib/monitoring/logger';
 
-type DeleteActionResult =
-  | {
-      status: 'error';
-      message: string;
-    }
-  | void;
-
-export async function deleteDevotionAction(formData: FormData): Promise<DeleteActionResult> {
+export async function deleteDevotionAction(formData: FormData): Promise<void> {
   const id = formData.get('devotionId');
   if (!id || typeof id !== 'string') {
-    return {
-      status: 'error',
-      message: '잘못된 요청입니다.',
-    };
+    throw new Error('잘못된 요청입니다.');
   }
 
   const profile = await getCurrentProfile();
@@ -33,7 +23,7 @@ export async function deleteDevotionAction(formData: FormData): Promise<DeleteAc
     redirect('/login?redirectTo=/devotion');
   }
 
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
 
   const { data: devotion, error } = await supabase
     .from('devotions')
@@ -43,39 +33,29 @@ export async function deleteDevotionAction(formData: FormData): Promise<DeleteAc
 
   if (error) {
     logError('묵상 조회 실패', { error, devotionId: id });
-    return {
-      status: 'error',
-      message: '삭제할 묵상을 찾지 못했습니다.',
-    };
+    throw new Error('삭제할 묵상을 찾지 못했습니다.');
   }
 
   if (!devotion) {
-    return {
-      status: 'error',
-      message: '이미 삭제되었거나 존재하지 않는 묵상입니다.',
-    };
+    throw new Error('이미 삭제되었거나 존재하지 않는 묵상입니다.');
   }
 
   if (devotion.author_id !== profile.id && !isAdmin(profile.role)) {
-    return {
-      status: 'error',
-      message: '삭제 권한이 없습니다.',
-    };
+    throw new Error('삭제 권한이 없습니다.');
   }
 
   const { error: deleteError } = await supabase.from('devotions').delete().eq('id', id);
 
   if (deleteError) {
     logError('묵상 삭제 실패', { error: deleteError, devotionId: id });
-    return {
-      status: 'error',
-      message: '묵상을 삭제하지 못했습니다. 잠시 후 다시 시도해주세요.',
-    };
+    throw new Error('묵상을 삭제하지 못했습니다. 잠시 후 다시 시도해주세요.');
   }
 
   if (devotion.image_url) {
     await removePublicStorageFile(supabase, devotion.image_url);
   }
+
+  revalidatePath('/devotion');
 
   redirect('/devotion');
 }
@@ -106,7 +86,7 @@ export async function updateDevotionAction(values: DevotionUpdateValues): Promis
     };
   }
 
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
 
   const { data: devotion, error } = await supabase
     .from('devotions')

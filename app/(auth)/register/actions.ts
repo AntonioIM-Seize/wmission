@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation';
 
 import { registerSchema, type RegisterFormValues } from '@/lib/validators/auth';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
+import type { Database } from '@/types/supabase';
 
 type RegisterActionError = {
   status: 'error';
@@ -24,7 +25,7 @@ export async function registerAction(values: RegisterFormValues): Promise<Regist
     };
   }
 
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
 
   const { data, error } = await supabase.auth.signUp({
     email: parsed.data.email,
@@ -49,14 +50,16 @@ export async function registerAction(values: RegisterFormValues): Promise<Regist
   const userId = data.user?.id;
 
   if (userId) {
+    const profileUpdatePayload = {
+      full_name: parsed.data.fullName,
+      phone: parsed.data.phone ?? null,
+      join_reason: parsed.data.joinReason,
+      status: 'pending',
+    } satisfies Database['public']['Tables']['profiles']['Update'];
+
     const { error: profileError } = await supabase
       .from('profiles')
-      .update({
-        full_name: parsed.data.fullName,
-        phone: parsed.data.phone ?? null,
-        join_reason: parsed.data.joinReason,
-        status: 'pending',
-      })
+      .update(profileUpdatePayload)
       .eq('id', userId);
 
     if (profileError) {

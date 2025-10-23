@@ -6,10 +6,9 @@ import { requireRole } from '@/lib/auth/session';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { supporterUpsertSchema } from '@/lib/validators/supporter';
 import { logError } from '@/lib/monitoring/logger';
+import type { Database } from '@/types/supabase';
 
-type ActionResult = { status: 'error'; message: string } | void;
-
-export async function upsertSupporterAction(formData: FormData): Promise<ActionResult> {
+export async function upsertSupporterAction(formData: FormData): Promise<void> {
   await requireRole('admin');
 
   const payload = supporterUpsertSchema.safeParse({
@@ -21,49 +20,49 @@ export async function upsertSupporterAction(formData: FormData): Promise<ActionR
   });
 
   if (!payload.success) {
-    return {
-      status: 'error',
-      message: payload.error.issues[0]?.message ?? '입력값을 확인해주세요.',
-    };
+    logError('후원자 저장 검증 실패', { issues: payload.error.issues });
+    return;
   }
 
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
   const values = payload.data;
 
-  const { error } = await supabase.from('supporters').upsert(
-    {
-      id: values.id,
-      name: values.name.trim(),
-      amount: Number(values.amount),
-      supported_on: values.supportedOn,
-      memo: values.memo ? values.memo.trim() : null,
-    },
-    { onConflict: 'id' },
-  );
+  const upsertPayload = {
+    id: values.id,
+    name: values.name.trim(),
+    amount: Number(values.amount),
+    supported_on: values.supportedOn,
+    memo: values.memo ? values.memo.trim() : null,
+  } satisfies Database['public']['Tables']['supporters']['Insert'];
+
+  const { error } = await supabase
+    .from('supporters')
+    .upsert(upsertPayload, { onConflict: 'id' });
 
   if (error) {
     logError('후원자 저장 실패', { error, supporterId: values.id });
-    return { status: 'error', message: '후원 정보를 저장하지 못했습니다.' };
+    return;
   }
 
   revalidatePath('/admin/supporters');
 }
 
-export async function deleteSupporterAction(formData: FormData): Promise<ActionResult> {
+export async function deleteSupporterAction(formData: FormData): Promise<void> {
   await requireRole('admin');
 
   const supporterId = formData.get('supporterId');
 
   if (typeof supporterId !== 'string') {
-    return { status: 'error', message: '잘못된 요청입니다.' };
+    logError('후원자 삭제 실패 - 잘못된 supporterId', { supporterId });
+    return;
   }
 
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
   const { error } = await supabase.from('supporters').delete().eq('id', supporterId);
 
   if (error) {
     logError('후원자 삭제 실패', { error, supporterId });
-    return { status: 'error', message: '후원 정보를 삭제하지 못했습니다.' };
+    return;
   }
 
   revalidatePath('/admin/supporters');

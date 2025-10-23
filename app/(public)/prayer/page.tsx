@@ -41,7 +41,7 @@ type PrayerPageProps = {
 };
 
 export default async function PrayerPage({ searchParams }: PrayerPageProps) {
-  const language = detectInitialLanguage();
+  const language = await detectInitialLanguage();
   const profile = await getCurrentProfile();
 
   const page = Math.max(Number(searchParams.page ?? '1') || 1, 1);

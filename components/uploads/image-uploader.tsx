@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import { PhotoIcon, TrashIcon, UploadCloudIcon } from 'lucide-react';
+import { ImageIcon, TrashIcon, UploadCloudIcon } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -108,7 +108,7 @@ export function ImageUploader({ value, onChange, label }: ImageUploaderProps) {
       ) : (
         <div className="flex h-40 items-center justify-center rounded-lg border border-dashed border-border/60 text-xs text-muted-foreground">
           <div className="flex flex-col items-center gap-2">
-            <PhotoIcon className="h-6 w-6" />
+            <ImageIcon className="h-6 w-6" />
             <span>이미지를 업로드하면 미리보기가 표시됩니다.</span>
           </div>
         </div>

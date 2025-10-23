@@ -6,6 +6,7 @@ import { redirect } from 'next/navigation';
 import { getCurrentProfile } from '@/lib/auth/session';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { profileUpdateSchema, type ProfileUpdateValues } from '@/lib/validators/auth';
+import type { Database } from '@/types/supabase';
 
 type ProfileUpdateActionResult =
   | {
@@ -32,16 +33,18 @@ export async function updateProfileAction(values: ProfileUpdateValues): Promise<
     };
   }
 
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
   const payload = parsed.data;
+
+  const updatePayload = {
+    full_name: payload.fullName.trim(),
+    phone: payload.phone ? payload.phone.trim() : null,
+    join_reason: payload.joinReason.trim(),
+  } satisfies Database['public']['Tables']['profiles']['Update'];
 
   const { error } = await supabase
     .from('profiles')
-    .update({
-      full_name: payload.fullName.trim(),
-      phone: payload.phone ? payload.phone.trim() : null,
-      join_reason: payload.joinReason.trim(),
-    })
+    .update(updatePayload)
     .eq('id', profile.id);
 
   if (error) {

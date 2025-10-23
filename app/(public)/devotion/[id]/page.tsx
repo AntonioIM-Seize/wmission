@@ -65,7 +65,7 @@ export async function generateMetadata({ params }: DevotionDetailPageProps): Pro
 }
 
 export default async function DevotionDetailPage({ params }: DevotionDetailPageProps) {
-  const language = detectInitialLanguage();
+  const language = await detectInitialLanguage();
   const profile = await getCurrentProfile();
 
   const devotion = await getDevotionById(params.id);

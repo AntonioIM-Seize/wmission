@@ -21,7 +21,7 @@ type ProfilesRow = Database['public']['Tables']['profiles']['Row'] & {
 };
 
 export async function getAdminUsers(params: { search?: string | null; status?: ProfileStatus | null }) {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
 
   let query = supabase
     .from('profiles')

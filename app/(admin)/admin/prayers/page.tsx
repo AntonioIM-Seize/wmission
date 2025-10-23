@@ -20,7 +20,7 @@ type AdminPrayersPageProps = {
 };
 
 export default async function AdminPrayersPage({ searchParams }: AdminPrayersPageProps) {
-  const language = detectInitialLanguage();
+  const language = await detectInitialLanguage();
 
   const page = Math.max(Number(searchParams.page ?? '1') || 1, 1);
   const searchKeyword = searchParams.q?.trim() ?? '';

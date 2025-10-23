@@ -1,0 +1,35 @@
+{
+  "node": {
+    "4006106475146b4cc05ec5299af620d4ce2362964d": {
+      "workers": {
+        "app/(admin)/admin/prayers/page": {
+          "moduleId": "59772",
+          "async": false,
+          "exportedName": "deletePrayerAdminAction",
+          "filename": "app/(admin)/admin/prayers/actions.ts"
+        }
+      },
+      "layer": {
+        "app/(admin)/admin/prayers/page": "rsc"
+      },
+      "exportedName": "deletePrayerAdminAction",
+      "filename": "app/(admin)/admin/prayers/actions.ts"
+    },
+    "400e4fa9a13f9ba5eb0bec3b4cdafc709a29e617e9": {
+      "workers": {
+        "app/(admin)/admin/prayers/page": {
+          "moduleId": "59772",
+          "async": false,
+          "exportedName": "togglePrayerAnsweredAction",
+          "filename": "app/(admin)/admin/prayers/actions.ts"
+        }
+      },
+      "layer": {
+        "app/(admin)/admin/prayers/page": "rsc"
+      },
+      "exportedName": "togglePrayerAnsweredAction",
+      "filename": "app/(admin)/admin/prayers/actions.ts"
+    }
+  },
+  "edge": {}
+}

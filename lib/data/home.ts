@@ -142,7 +142,7 @@ function mapSettings(row: SiteSettingRow | null): HomeSettings | null {
 }
 
 export async function getHomeData(): Promise<HomeData> {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
 
   const [{ data: settingsRow, error: settingsError }, { data: devotionRows, error: devotionsError }, { data: prayerRows, error: prayersError }] =
     await Promise.all([

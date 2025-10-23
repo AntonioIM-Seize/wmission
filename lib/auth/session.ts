@@ -7,7 +7,7 @@ import type { Database, ProfileStatus, UserRole } from '@/types/supabase';
 type ProfileRow = Database['public']['Tables']['profiles']['Row'];
 
 export async function getCurrentSession() {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase.auth.getSession();
   if (error) {
     console.error('세션 조회 실패', error);
@@ -22,7 +22,7 @@ export async function getCurrentProfile(): Promise<ProfileRow | null> {
     return null;
   }
 
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from('profiles')
     .select('*')

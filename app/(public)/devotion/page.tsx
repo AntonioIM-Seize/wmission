@@ -39,7 +39,7 @@ type DevotionListPageProps = {
 };
 
 export default async function DevotionListPage({ searchParams }: DevotionListPageProps) {
-  const language = detectInitialLanguage();
+  const language = await detectInitialLanguage();
   const profile = await getCurrentProfile();
 
   const page = Math.max(Number(searchParams.page ?? '1') || 1, 1);

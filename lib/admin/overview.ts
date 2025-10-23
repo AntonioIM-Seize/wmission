@@ -48,7 +48,7 @@ function countOrZero(response: CountResponse) {
 }
 
 export async function getAdminOverview(): Promise<OverviewMetrics> {
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
 
   const [
     totalUsersRes,
@@ -92,7 +92,7 @@ export async function getAdminOverview(): Promise<OverviewMetrics> {
       .from('prayers')
       .select('id', { count: 'exact', head: true })
       .eq('is_answered', true) as unknown as Promise<CountResponse>,
-    supabase.from('supporters').select('amount', { count: 'exact' }) as Promise<{
+    supabase.from('supporters').select('amount', { count: 'exact' }) as unknown as Promise<{
       data: AmountRow[] | null;
       error: Error | null;
       count: number | null;
