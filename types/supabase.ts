@@ -312,6 +312,10 @@ type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
 
 type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
 
+export type UserRole = Database['public']['Enums']['user_role']
+export type ProfileStatus = Database['public']['Enums']['profile_status']
+export type PrayerReactionType = Database['public']['Enums']['prayer_reaction']
+
 export type Tables<
   DefaultSchemaTableNameOrOptions extends
     | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
