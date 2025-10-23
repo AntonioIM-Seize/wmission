@@ -51,7 +51,7 @@ export async function middleware(request: NextRequest) {
       .eq('id', session.user.id)
       .single();
 
-    if (!profile || profile.role !== 'admin') {
+    if (!profile || (profile as any).role !== 'admin') {
       const redirectUrl = request.nextUrl.clone();
       redirectUrl.pathname = '/';
       return NextResponse.redirect(redirectUrl);
@@ -73,7 +73,7 @@ export async function middleware(request: NextRequest) {
       .eq('id', session.user.id)
       .single();
 
-    if (!profile || profile.status !== 'approved') {
+    if (!profile || (profile as any).status !== 'approved') {
       const redirectUrl = request.nextUrl.clone();
       redirectUrl.pathname = '/';
       redirectUrl.searchParams.set('notice', 'pending');
