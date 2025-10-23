@@ -106,6 +106,12 @@
       "namedRegex": "^/admin/devotions/export(?:/)?$"
     },
     {
+      "page": "/admin/inquiries",
+      "regex": "^/admin/inquiries(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/inquiries(?:/)?$"
+    },
+    {
       "page": "/admin/prayers",
       "regex": "^/admin/prayers(?:/)?$",
       "routeKeys": {},
@@ -116,18 +122,6 @@
       "regex": "^/admin/settings(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/admin/settings(?:/)?$"
-    },
-    {
-      "page": "/admin/supporters",
-      "regex": "^/admin/supporters(?:/)?$",
-      "routeKeys": {},
-      "namedRegex": "^/admin/supporters(?:/)?$"
-    },
-    {
-      "page": "/admin/supporters/export",
-      "regex": "^/admin/supporters/export(?:/)?$",
-      "routeKeys": {},
-      "namedRegex": "^/admin/supporters/export(?:/)?$"
     },
     {
       "page": "/admin/users",

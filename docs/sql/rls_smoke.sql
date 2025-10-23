@@ -44,22 +44,22 @@ values (
 );
 
 ------------------------------------------------------------
--- 3. 관리자 후원자 데이터 접근 확인
+-- 3. 관리자 문의 데이터 접근 확인
 ------------------------------------------------------------
 select set_config('request.jwt.claim.sub', :'admin_user_uuid', false);
 select set_config('request.jwt.claim.role', 'authenticated', false);
 
 -- 기대: 조회 성공
-select * from supporters limit 1;
+select * from inquiries limit 1;
 
 ------------------------------------------------------------
--- 4. 일반 회원 후원자 데이터 접근 차단 확인
+-- 4. 일반 회원 문의 데이터 접근 차단 확인
 ------------------------------------------------------------
 select set_config('request.jwt.claim.sub', :'approved_user_uuid', false);
 select set_config('request.jwt.claim.role', 'authenticated', false);
 
 -- 기대: 권한 오류
-select * from supporters limit 1;
+select * from inquiries limit 1;
 
 ------------------------------------------------------------
 -- 5. 승인 대기 회원 기도 반응 허용 확인

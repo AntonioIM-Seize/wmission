@@ -31,7 +31,7 @@ export default function DevotionError({ error, reset }: DevotionErrorProps) {
           다시 시도
         </Button>
         <Button asChild variant="outline" size="sm">
-          <a href="/support">후원/문의 페이지로 이동</a>
+          <a href="/support">문의 페이지로 이동</a>
         </Button>
       </div>
     </div>

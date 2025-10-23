@@ -7,7 +7,7 @@ const NAV_ITEMS = [
   { href: '/admin/users', label: '회원 관리' },
   { href: '/admin/devotions', label: '묵상 관리' },
   { href: '/admin/prayers', label: '기도 관리' },
-  { href: '/admin/supporters', label: '후원자 관리' },
+  { href: '/admin/inquiries', label: '문의 관리' },
   { href: '/admin/settings', label: '사이트 설정' },
 ];
 

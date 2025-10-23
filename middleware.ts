@@ -9,10 +9,19 @@ const APPROVED_ONLY_PATHS = ['/devotion/write'];
 export async function middleware(request: NextRequest) {
   const response = NextResponse.next();
   
+  // 환경 변수 확인
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  if (!supabaseUrl || !supabaseAnonKey) {
+    console.error('Missing Supabase environment variables');
+    return response;
+  }
+  
   // Supabase 클라이언트 생성
   const supabase = createServerClient<Database>(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    supabaseUrl,
+    supabaseAnonKey,
     {
       cookies: {
         getAll() {
@@ -45,13 +54,20 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(redirectUrl);
     }
 
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('role')
-      .eq('id', session.user.id)
-      .single();
+    try {
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', session.user.id)
+        .single();
 
-    if (!profile || (profile as any).role !== 'admin') {
+      if (!profile || (profile as any).role !== 'admin') {
+        const redirectUrl = request.nextUrl.clone();
+        redirectUrl.pathname = '/';
+        return NextResponse.redirect(redirectUrl);
+      }
+    } catch (error) {
+      console.error('Error checking admin role:', error);
       const redirectUrl = request.nextUrl.clone();
       redirectUrl.pathname = '/';
       return NextResponse.redirect(redirectUrl);
@@ -67,16 +83,23 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(redirectUrl);
     }
 
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('status')
-      .eq('id', session.user.id)
-      .single();
+    try {
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('status')
+        .eq('id', session.user.id)
+        .single();
 
-    if (!profile || (profile as any).status !== 'approved') {
+      if (!profile || (profile as any).status !== 'approved') {
+        const redirectUrl = request.nextUrl.clone();
+        redirectUrl.pathname = '/';
+        redirectUrl.searchParams.set('notice', 'pending');
+        return NextResponse.redirect(redirectUrl);
+      }
+    } catch (error) {
+      console.error('Error checking user status:', error);
       const redirectUrl = request.nextUrl.clone();
       redirectUrl.pathname = '/';
-      redirectUrl.searchParams.set('notice', 'pending');
       return NextResponse.redirect(redirectUrl);
     }
   }

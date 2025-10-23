@@ -11,7 +11,7 @@ const NAV_ITEMS: Array<{ href: string; label: string }> = [
   { href: '/', label: '홈' },
   { href: '/devotion', label: '묵상' },
   { href: '/prayer', label: '함께 기도해요' },
-  { href: '/support', label: '후원 안내' },
+  { href: '/support', label: '문의하기' },
 ];
 
 export async function SiteHeader() {

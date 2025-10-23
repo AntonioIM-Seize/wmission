@@ -25,7 +25,7 @@ export default async function AdminOverviewPage() {
       <header className="space-y-2">
         <h1 className="text-2xl font-semibold text-slate-900">운영 현황 요약</h1>
         <p className="text-sm text-muted-foreground">
-          회원 승인 상태, 최근 콘텐츠 흐름, 후원 내역을 한눈에 확인하세요.
+          회원 승인 상태, 최근 콘텐츠 흐름, 문의 현황을 한눈에 확인하세요.
         </p>
       </header>
 
@@ -82,32 +82,32 @@ export default async function AdminOverviewPage() {
         </Card>
         <Card className="border border-border/60">
           <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className="text-base text-muted-foreground">후원 현황</CardTitle>
+            <CardTitle className="text-base text-muted-foreground">문의 현황</CardTitle>
             <Button asChild variant="outline" size="sm">
-              <Link href="/admin/supporters">후원 관리</Link>
+              <Link href="/admin/inquiries">문의 관리</Link>
             </Button>
           </CardHeader>
           <CardContent className="space-y-4 text-sm text-muted-foreground">
             <div className="space-y-1">
-              <p className="text-xs uppercase tracking-wide">총 후원 금액</p>
-              <p className="text-xl font-semibold text-slate-900">{formatCurrency(metrics.supporterAmount)}원</p>
+              <p className="text-xs uppercase tracking-wide">미해결 문의</p>
+              <p className="text-xl font-semibold text-slate-900">{metrics.pendingInquiries}건</p>
             </div>
             <div className="space-y-1">
-              <p className="text-xs uppercase tracking-wide">참여 후원자</p>
-              <p className="text-base text-slate-900">{metrics.totalSupporters}명</p>
+              <p className="text-xs uppercase tracking-wide">전체 문의</p>
+              <p className="text-base text-slate-900">{metrics.totalInquiries}건</p>
             </div>
             <Separator />
             <div className="space-y-2">
-              <p className="text-xs font-semibold text-slate-800">최근 후원</p>
+              <p className="text-xs font-semibold text-slate-800">최근 문의</p>
               <ul className="space-y-2">
-                {metrics.recentSupporters.length === 0 && (
-                  <li className="text-xs text-muted-foreground">최근 후원 내역이 없습니다.</li>
+                {metrics.recentInquiries.length === 0 && (
+                  <li className="text-xs text-muted-foreground">최근 문의가 없습니다.</li>
                 )}
-                {metrics.recentSupporters.map((supporter) => (
-                  <li key={supporter.id} className="flex items-center justify-between text-xs">
-                    <span className="font-medium text-slate-900">{supporter.name}</span>
+                {metrics.recentInquiries.map((inquiry) => (
+                  <li key={inquiry.id} className="flex items-center justify-between text-xs">
+                    <span className="font-medium text-slate-900">{inquiry.name}</span>
                     <span className="text-muted-foreground">
-                      {formatCurrency(supporter.amount)}원 · {formatDate(supporter.supportedOn, language)}
+                      {formatDate(inquiry.createdAt, language)} · {inquiry.status === 'pending' ? '대기' : '완료'}
                     </span>
                   </li>
                 ))}
@@ -245,8 +245,4 @@ function RecentList({ title, description, emptyMessage, items, actionHref, actio
       </CardContent>
     </Card>
   );
-}
-
-function formatCurrency(value: number) {
-  return new Intl.NumberFormat('ko-KR', { maximumFractionDigits: 0 }).format(value);
 }

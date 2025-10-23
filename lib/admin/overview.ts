@@ -1,12 +1,9 @@
 import { createSupabaseServerClient } from '@/lib/supabase/server';
+import type { InquiryStatus } from '@/types/supabase';
 
 type CountResponse = {
   count: number | null;
   error: Error | null;
-};
-
-type AmountRow = {
-  amount: number | null;
 };
 
 export type OverviewMetrics = {
@@ -19,8 +16,8 @@ export type OverviewMetrics = {
   totalDevotions: number;
   totalPrayers: number;
   answeredPrayers: number;
-  totalSupporters: number;
-  supporterAmount: number;
+  totalInquiries: number;
+  pendingInquiries: number;
   recentDevotions: Array<{
     id: string;
     title: string;
@@ -31,11 +28,12 @@ export type OverviewMetrics = {
     createdAt: string;
     isAnswered: boolean;
   }>;
-  recentSupporters: Array<{
+  recentInquiries: Array<{
     id: string;
     name: string;
-    amount: number;
-    supportedOn: string;
+    email: string;
+    status: InquiryStatus;
+    createdAt: string;
   }>;
 };
 
@@ -60,10 +58,11 @@ export async function getAdminOverview(): Promise<OverviewMetrics> {
     totalDevotionsRes,
     totalPrayersRes,
     answeredPrayersRes,
-    supportersAmountRes,
+    totalInquiriesRes,
+    pendingInquiriesRes,
     recentDevotionsRes,
     recentPrayersRes,
-    recentSupportersRes,
+    recentInquiriesRes,
   ] = await Promise.all([
     supabase.from('profiles').select('id', { count: 'exact', head: true }) as unknown as Promise<CountResponse>,
     supabase
@@ -92,11 +91,11 @@ export async function getAdminOverview(): Promise<OverviewMetrics> {
       .from('prayers')
       .select('id', { count: 'exact', head: true })
       .eq('is_answered', true) as unknown as Promise<CountResponse>,
-    supabase.from('supporters').select('amount', { count: 'exact' }) as unknown as Promise<{
-      data: AmountRow[] | null;
-      error: Error | null;
-      count: number | null;
-    }>,
+    supabase.from('inquiries').select('id', { count: 'exact', head: true }) as unknown as Promise<CountResponse>,
+    supabase
+      .from('inquiries')
+      .select('id', { count: 'exact', head: true })
+      .eq('status', 'pending') as unknown as Promise<CountResponse>,
     supabase
       .from('devotions')
       .select('id, title, published_at')
@@ -108,9 +107,9 @@ export async function getAdminOverview(): Promise<OverviewMetrics> {
       .order('created_at', { ascending: false })
       .limit(5),
     supabase
-      .from('supporters')
-      .select('id, name, amount, supported_on')
-      .order('supported_on', { ascending: false })
+      .from('inquiries')
+      .select('id, name, email, status, created_at')
+      .order('created_at', { ascending: false })
       .limit(5),
   ]);
 
@@ -123,19 +122,8 @@ export async function getAdminOverview(): Promise<OverviewMetrics> {
   const totalDevotions = countOrZero(totalDevotionsRes);
   const totalPrayers = countOrZero(totalPrayersRes);
   const answeredPrayers = countOrZero(answeredPrayersRes);
-
-  let totalSupporters = 0;
-  let supporterAmount = 0;
-  if (supportersAmountRes.error) {
-    console.error('후원자 통계 조회 실패', supportersAmountRes.error);
-  } else {
-    totalSupporters = supportersAmountRes.count ?? supportersAmountRes.data?.length ?? 0;
-    supporterAmount =
-      supportersAmountRes.data?.reduce((sum, row) => {
-        const value = Number(row.amount ?? 0);
-        return Number.isNaN(value) ? sum : sum + value;
-      }, 0) ?? 0;
-  }
+  const totalInquiries = countOrZero(totalInquiriesRes);
+  const pendingInquiries = countOrZero(pendingInquiriesRes);
 
   if (recentDevotionsRes.error) {
     console.error('최신 묵상 조회 실패', recentDevotionsRes.error);
@@ -143,8 +131,8 @@ export async function getAdminOverview(): Promise<OverviewMetrics> {
   if (recentPrayersRes.error) {
     console.error('최신 기도 조회 실패', recentPrayersRes.error);
   }
-  if (recentSupportersRes.error) {
-    console.error('최신 후원자 조회 실패', recentSupportersRes.error);
+  if (recentInquiriesRes.error) {
+    console.error('최신 문의 조회 실패', recentInquiriesRes.error);
   }
 
   return {
@@ -157,8 +145,8 @@ export async function getAdminOverview(): Promise<OverviewMetrics> {
     totalDevotions,
     totalPrayers,
     answeredPrayers,
-    totalSupporters,
-    supporterAmount,
+    totalInquiries,
+    pendingInquiries,
     recentDevotions:
       recentDevotionsRes.data?.map((row) => ({
         id: row.id,
@@ -171,12 +159,13 @@ export async function getAdminOverview(): Promise<OverviewMetrics> {
         createdAt: row.created_at,
         isAnswered: row.is_answered,
       })) ?? [],
-    recentSupporters:
-      recentSupportersRes.data?.map((row) => ({
+    recentInquiries:
+      recentInquiriesRes.data?.map((row) => ({
         id: row.id,
         name: row.name,
-        amount: Number(row.amount ?? 0),
-        supportedOn: row.supported_on,
+        email: row.email,
+        status: row.status,
+        createdAt: row.created_at,
       })) ?? [],
   };
 }

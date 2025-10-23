@@ -218,66 +218,72 @@ export type Database = {
       }
       site_settings: {
         Row: {
-          bank_account: string
-          bank_holder: string
-          bank_name: string
           created_at: string
           id: string
           main_prayer: string
+          contact_email: string
+          contact_phone: string
+          contact_note: string
           updated_at: string
           verse_ref: string
           verse_text: string
         }
         Insert: {
-          bank_account: string
-          bank_holder: string
-          bank_name: string
           created_at?: string
           id?: string
           main_prayer: string
+          contact_email: string
+          contact_phone: string
+          contact_note: string
           updated_at?: string
           verse_ref: string
           verse_text: string
         }
         Update: {
-          bank_account?: string
-          bank_holder?: string
-          bank_name?: string
           created_at?: string
           id?: string
           main_prayer?: string
+          contact_email?: string
+          contact_phone?: string
+          contact_note?: string
           updated_at?: string
           verse_ref?: string
           verse_text?: string
         }
         Relationships: []
       }
-      supporters: {
+      inquiries: {
         Row: {
-          amount: number
           created_at: string
+          email: string
           id: string
-          memo: string | null
+          message: string
           name: string
-          supported_on: string
+          phone: string | null
+          responded_at: string | null
+          status: Database["public"]["Enums"]["inquiry_status"]
           updated_at: string
         }
         Insert: {
-          amount: number
           created_at?: string
+          email: string
           id?: string
-          memo?: string | null
+          message: string
           name: string
-          supported_on: string
+          phone?: string | null
+          responded_at?: string | null
+          status?: Database["public"]["Enums"]["inquiry_status"]
           updated_at?: string
         }
         Update: {
-          amount?: number
           created_at?: string
+          email?: string
           id?: string
-          memo?: string | null
+          message?: string
           name?: string
-          supported_on?: string
+          phone?: string | null
+          responded_at?: string | null
+          status?: Database["public"]["Enums"]["inquiry_status"]
           updated_at?: string
         }
         Relationships: []
@@ -298,6 +304,7 @@ export type Database = {
       show_trgm: { Args: { "": string }; Returns: string[] }
     }
     Enums: {
+      inquiry_status: "pending" | "resolved"
       prayer_reaction: "amen" | "together"
       profile_status: "pending" | "approved" | "rejected" | "blocked"
       user_role: "member" | "admin"
@@ -315,6 +322,7 @@ type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
 export type UserRole = Database['public']['Enums']['user_role']
 export type ProfileStatus = Database['public']['Enums']['profile_status']
 export type PrayerReactionType = Database['public']['Enums']['prayer_reaction']
+export type InquiryStatus = Database['public']['Enums']['inquiry_status']
 
 export type Tables<
   DefaultSchemaTableNameOrOptions extends
@@ -432,6 +440,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      inquiry_status: ["pending", "resolved"],
       prayer_reaction: ["amen", "together"],
       profile_status: ["pending", "approved", "rejected", "blocked"],
       user_role: ["member", "admin"],

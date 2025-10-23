@@ -1,0 +1,20 @@
+{
+  "node": {
+    "4013e25727dda5af42aae56b0cd29e64e9989c9600": {
+      "workers": {
+        "app/(admin)/admin/inquiries/page": {
+          "moduleId": "36279",
+          "async": false,
+          "exportedName": "updateInquiryStatusAction",
+          "filename": "app/(admin)/admin/inquiries/actions.ts"
+        }
+      },
+      "layer": {
+        "app/(admin)/admin/inquiries/page": "rsc"
+      },
+      "exportedName": "updateInquiryStatusAction",
+      "filename": "app/(admin)/admin/inquiries/actions.ts"
+    }
+  },
+  "edge": {}
+}

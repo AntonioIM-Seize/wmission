@@ -17,22 +17,21 @@ export const siteSettingsSchema = z.object({
     .trim()
     .min(5, '메인 기도 제목을 입력해주세요.')
     .max(200, '메인 기도 제목은 200자 이내로 입력해주세요.'),
-  bankName: z
+  contactEmail: z
     .string()
     .trim()
-    .min(2, '은행명을 입력해주세요.')
-    .max(60, '은행명은 60자 이내로 입력해주세요.'),
-  bankAccount: z
+    .email('연락받을 이메일을 입력해주세요.')
+    .max(120, '이메일은 120자 이내로 입력해주세요.'),
+  contactPhone: z
     .string()
     .trim()
-    .min(3, '계좌번호를 입력해주세요.')
-    .max(40, '계좌번호는 40자 이내로 입력해주세요.')
-    .regex(/^[0-9\s-]+$/, '계좌번호는 숫자와 공백, 하이픈만 사용할 수 있습니다.'),
-  bankHolder: z
+    .min(5, '연락 가능한 전화번호나 채널을 입력해주세요.')
+    .max(60, '연락처는 60자 이내로 입력해주세요.'),
+  contactNote: z
     .string()
     .trim()
-    .min(2, '예금주를 입력해주세요.')
-    .max(60, '예금주는 60자 이내로 입력해주세요.'),
+    .min(5, '연락 안내 문구를 입력해주세요.')
+    .max(200, '연락 안내 문구는 200자 이내로 입력해주세요.'),
 });
 
 export type SiteSettingsValues = z.infer<typeof siteSettingsSchema>;

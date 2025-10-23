@@ -28,7 +28,7 @@ export default async function AdminSettingsPage() {
       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div>
           <h2 className="text-xl font-semibold text-slate-900">사이트 설정</h2>
-          <p className="text-sm text-muted-foreground">홈/후원 페이지에 노출되는 주요 정보를 수정합니다.</p>
+          <p className="text-sm text-muted-foreground">홈/문의 페이지에 노출되는 주요 정보를 수정합니다.</p>
         </div>
         <Button asChild variant="outline" size="sm">
           <Link href="/" target="_blank">

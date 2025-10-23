@@ -59,20 +59,12 @@ export default async function HomePage() {
                 {settings?.mainPrayer ?? '주요 기도 제목이 곧 업데이트 됩니다.'}
               </p>
             </div>
-            <div className="space-y-2 text-sm">
-              <p className="font-medium text-slate-800">후원 계좌</p>
-              <div className="rounded-lg border border-dashed border-primary/40 bg-primary/5 p-4">
-                <p className="font-semibold text-primary">{settings?.bankName ?? '-'}</p>
-                <p className="mt-1 font-mono text-base text-slate-900">{settings?.bankAccount ?? '-'}</p>
-                <p className="text-xs text-muted-foreground">예금주: {settings?.bankHolder ?? '-'}</p>
-              </div>
-            </div>
             <div className="flex flex-wrap gap-2">
               <Button asChild variant="default">
                 <Link href="/prayer">기도 목록 보기</Link>
               </Button>
               <Button asChild variant="outline">
-                <Link href="/support">후원 안내</Link>
+                <Link href="/support">문의하기</Link>
               </Button>
             </div>
           </div>

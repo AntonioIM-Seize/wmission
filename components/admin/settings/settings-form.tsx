@@ -56,22 +56,29 @@ export function SettingsForm({ settings }: SettingsFormProps) {
 
       <div className="grid gap-4 md:grid-cols-3">
         <div>
-          <label className="text-xs text-muted-foreground" htmlFor="bankName">
-            은행명
+          <label className="text-xs text-muted-foreground" htmlFor="contactEmail">
+            문의 이메일
           </label>
-          <Input id="bankName" name="bankName" defaultValue={settings.bankName} required className="mt-1" />
+          <Input
+            id="contactEmail"
+            name="contactEmail"
+            type="email"
+            defaultValue={settings.contactEmail}
+            required
+            className="mt-1"
+          />
         </div>
         <div>
-          <label className="text-xs text-muted-foreground" htmlFor="bankAccount">
-            계좌번호
+          <label className="text-xs text-muted-foreground" htmlFor="contactPhone">
+            연락처(전화/채널)
           </label>
-          <Input id="bankAccount" name="bankAccount" defaultValue={settings.bankAccount} required className="mt-1" />
+          <Input id="contactPhone" name="contactPhone" defaultValue={settings.contactPhone} required className="mt-1" />
         </div>
         <div>
-          <label className="text-xs text-muted-foreground" htmlFor="bankHolder">
-            예금주
+          <label className="text-xs text-muted-foreground" htmlFor="contactNote">
+            안내 문구
           </label>
-          <Input id="bankHolder" name="bankHolder" defaultValue={settings.bankHolder} required className="mt-1" />
+          <Input id="contactNote" name="contactNote" defaultValue={settings.contactNote} required className="mt-1" />
         </div>
       </div>
 

@@ -10,9 +10,9 @@ export type SiteSettings = {
   verseRef: string;
   verseText: string;
   mainPrayer: string;
-  bankName: string;
-  bankAccount: string;
-  bankHolder: string;
+  contactEmail: string;
+  contactPhone: string;
+  contactNote: string;
   createdAt?: string;
   updatedAt?: string;
 };
@@ -41,9 +41,9 @@ export async function getSiteSettings(): Promise<SiteSettings | null> {
     verseRef: data.verse_ref,
     verseText: data.verse_text,
     mainPrayer: data.main_prayer,
-    bankName: data.bank_name,
-    bankAccount: data.bank_account,
-    bankHolder: data.bank_holder,
+    contactEmail: data.contact_email,
+    contactPhone: data.contact_phone,
+    contactNote: data.contact_note,
     createdAt: data.created_at ?? undefined,
     updatedAt: data.updated_at ?? undefined,
   } satisfies SiteSettings;

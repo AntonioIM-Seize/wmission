@@ -22,9 +22,9 @@ export async function updateSiteSettingsAction(
     verseRef: formData.get('verseRef'),
     verseText: formData.get('verseText'),
     mainPrayer: formData.get('mainPrayer'),
-    bankName: formData.get('bankName'),
-    bankAccount: formData.get('bankAccount'),
-    bankHolder: formData.get('bankHolder'),
+    contactEmail: formData.get('contactEmail'),
+    contactPhone: formData.get('contactPhone'),
+    contactNote: formData.get('contactNote'),
   });
 
   if (!parsed.success) {
@@ -41,9 +41,9 @@ export async function updateSiteSettingsAction(
     verse_ref: values.verseRef,
     verse_text: values.verseText,
     main_prayer: values.mainPrayer,
-    bank_name: values.bankName,
-    bank_account: values.bankAccount,
-    bank_holder: values.bankHolder,
+    contact_email: values.contactEmail,
+    contact_phone: values.contactPhone,
+    contact_note: values.contactNote,
   } satisfies Database['public']['Tables']['site_settings']['Update'];
 
   const { error } = await supabase

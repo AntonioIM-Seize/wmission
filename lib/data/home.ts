@@ -29,9 +29,9 @@ export type HomeSettings = {
   verseRef: string;
   verseText: string;
   mainPrayer: string;
-  bankName: string;
-  bankAccount: string;
-  bankHolder: string;
+  contactEmail: string;
+  contactPhone: string;
+  contactNote: string;
 };
 
 export type HomeDevotion = {
@@ -135,9 +135,9 @@ function mapSettings(row: SiteSettingRow | null): HomeSettings | null {
     verseRef: row.verse_ref,
     verseText: row.verse_text,
     mainPrayer: row.main_prayer,
-    bankName: row.bank_name,
-    bankAccount: row.bank_account,
-    bankHolder: row.bank_holder,
+    contactEmail: row.contact_email,
+    contactPhone: row.contact_phone,
+    contactNote: row.contact_note,
   } satisfies HomeSettings;
 }
 

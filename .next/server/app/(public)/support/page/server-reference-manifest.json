@@ -3,7 +3,7 @@
     "006e87d2ba50d7749061e0234a2c5ee819ab969621": {
       "workers": {
         "app/(public)/support/page": {
-          "moduleId": "63668",
+          "moduleId": "9364",
           "async": false,
           "exportedName": "signOutAction",
           "filename": "app/(auth)/logout/actions.ts"
@@ -14,6 +14,21 @@
       },
       "exportedName": "signOutAction",
       "filename": "app/(auth)/logout/actions.ts"
+    },
+    "604c7416ceeedddfc0b011e3ffe7431e3af78b3e38": {
+      "workers": {
+        "app/(public)/support/page": {
+          "moduleId": "9364",
+          "async": false,
+          "exportedName": "submitInquiryAction",
+          "filename": "app/(public)/support/actions.ts"
+        }
+      },
+      "layer": {
+        "app/(public)/support/page": "action-browser"
+      },
+      "exportedName": "submitInquiryAction",
+      "filename": "app/(public)/support/actions.ts"
     }
   },
   "edge": {}
