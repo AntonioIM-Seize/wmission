@@ -49,6 +49,7 @@ export async function middleware(request: NextRequest) {
 
   const pathname = request.nextUrl.pathname;
 
+  // Admin 페이지 보호
   if (pathname.startsWith('/admin')) {
     if (!session) {
       const redirectUrl = request.nextUrl.clone();
@@ -71,6 +72,7 @@ export async function middleware(request: NextRequest) {
     }
   }
 
+  // 승인된 사용자만 접근 가능한 경로
   if (APPROVED_ONLY_PATHS.includes(pathname)) {
     if (!session) {
       const redirectUrl = request.nextUrl.clone();
@@ -97,8 +99,18 @@ export async function middleware(request: NextRequest) {
   return response;
 }
 
+// ✅ 수정된 부분: 모든 경로에서 middleware 실행
 export const config = {
-  matcher: ['/admin/:path*', '/devotion/write'],
+  matcher: [
+    /*
+     * 다음을 제외한 모든 경로에서 실행:
+     * - _next/static (정적 파일)
+     * - _next/image (이미지 최적화)
+     * - favicon.ico (파비콘)
+     * - public 폴더 파일들 (*.svg, *.png 등)
+     */
+    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+  ],
 };
 
 function normalizeOrigin(value?: string | null) {
