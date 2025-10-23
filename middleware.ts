@@ -2,12 +2,23 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
 
-import { logWarn } from '@/lib/monitoring/logger';
 import type { Database } from '@/types/supabase';
 
 const APPROVED_ONLY_PATHS = ['/devotion/write'];
 const SAFE_METHODS = new Set(['GET', 'HEAD', 'OPTIONS']);
 const LOCAL_ORIGINS = ['http://localhost:3000', 'http://127.0.0.1:3000'];
+
+function logWarn(message: string, meta?: Record<string, unknown>) {
+  console.warn(
+    JSON.stringify({
+      level: 'warn',
+      message,
+      meta,
+      timestamp: new Date().toISOString(),
+      source: 'middleware',
+    }),
+  );
+}
 
 export async function middleware(request: NextRequest) {
   const csrfViolation = enforceCsrf(request);
