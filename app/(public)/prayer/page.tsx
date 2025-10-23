@@ -35,16 +35,17 @@ export const metadata: Metadata = {
 };
 
 type PrayerPageProps = {
-  searchParams: {
+  searchParams: Promise<{
     page?: string;
-  };
+  }>;
 };
 
 export default async function PrayerPage({ searchParams }: PrayerPageProps) {
   const language = await detectInitialLanguage();
   const profile = await getCurrentProfile();
+  const params = await searchParams;
 
-  const page = Math.max(Number(searchParams.page ?? '1') || 1, 1);
+  const page = Math.max(Number(params.page ?? '1') || 1, 1);
 
   const { items, total } = await getPrayers({
     page,

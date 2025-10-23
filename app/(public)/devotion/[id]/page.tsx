@@ -15,13 +15,14 @@ import { formatDate } from '@/lib/utils/date';
 import { stripHtml, truncateText } from '@/lib/utils/text';
 
 type DevotionDetailPageProps = {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 };
 
 export async function generateMetadata({ params }: DevotionDetailPageProps): Promise<Metadata> {
-  const devotion = await getDevotionById(params.id);
+  const { id } = await params;
+  const devotion = await getDevotionById(id);
 
   if (!devotion) {
     return {
@@ -67,8 +68,9 @@ export async function generateMetadata({ params }: DevotionDetailPageProps): Pro
 export default async function DevotionDetailPage({ params }: DevotionDetailPageProps) {
   const language = await detectInitialLanguage();
   const profile = await getCurrentProfile();
+  const { id } = await params;
 
-  const devotion = await getDevotionById(params.id);
+  const devotion = await getDevotionById(id);
 
   if (!devotion) {
     notFound();

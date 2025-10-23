@@ -18,23 +18,24 @@ import {
 const PAGE_SIZE = 12;
 
 type AdminDevotionsPageProps = {
-  searchParams: {
+  searchParams: Promise<{
     q?: string;
     page?: string;
     startDate?: string;
     endDate?: string;
     hasImage?: 'all' | 'with' | 'without';
-  };
+  }>;
 };
 
 export default async function AdminDevotionsPage({ searchParams }: AdminDevotionsPageProps) {
   const language = await detectInitialLanguage();
+  const params = await searchParams;
 
-  const query = searchParams.q?.trim() ?? '';
-  const page = Math.max(Number(searchParams.page ?? '1') || 1, 1);
-  const startDate = isValidDate(searchParams.startDate) ? searchParams.startDate! : '';
-  const endDate = isValidDate(searchParams.endDate) ? searchParams.endDate! : '';
-  const hasImage = parseHasImageFilter(searchParams.hasImage);
+  const query = params.q?.trim() ?? '';
+  const page = Math.max(Number(params.page ?? '1') || 1, 1);
+  const startDate = isValidDate(params.startDate) ? params.startDate! : '';
+  const endDate = isValidDate(params.endDate) ? params.endDate! : '';
+  const hasImage = parseHasImageFilter(params.hasImage);
 
   const hasDateRangeError = Boolean(startDate && endDate && startDate > endDate);
 

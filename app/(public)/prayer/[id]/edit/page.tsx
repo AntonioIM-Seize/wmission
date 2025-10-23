@@ -8,26 +8,27 @@ import { isAdmin } from '@/lib/auth/utils';
 import type { PrayerUpdateValues } from '@/lib/validators/prayer';
 
 type PrayerEditPageProps = {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 };
 
 export default async function PrayerEditPage({ params }: PrayerEditPageProps) {
   const profile = await getCurrentProfile();
+  const { id } = await params;
 
   if (!profile) {
-    redirect(`/login?redirectTo=/prayer/${params.id}/edit`);
+    redirect(`/login?redirectTo=/prayer/${id}/edit`);
   }
 
-  const prayer = await getPrayerById(params.id);
+  const prayer = await getPrayerById(id);
 
   if (!prayer) {
     notFound();
   }
 
   if (prayer.authorId !== profile.id && !isAdmin(profile.role)) {
-    redirect(`/prayer/${params.id}`);
+    redirect(`/prayer/${id}`);
   }
 
   const initialValues: PrayerUpdateValues = {

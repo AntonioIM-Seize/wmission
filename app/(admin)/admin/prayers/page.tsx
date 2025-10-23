@@ -12,19 +12,20 @@ import { deletePrayerAdminAction, togglePrayerAnsweredAction } from '@/app/(admi
 const PAGE_SIZE = 15;
 
 type AdminPrayersPageProps = {
-  searchParams: {
+  searchParams: Promise<{
     page?: string;
     q?: string;
     status?: 'all' | 'answered' | 'pending';
-  };
+  }>;
 };
 
 export default async function AdminPrayersPage({ searchParams }: AdminPrayersPageProps) {
   const language = await detectInitialLanguage();
+  const params = await searchParams;
 
-  const page = Math.max(Number(searchParams.page ?? '1') || 1, 1);
-  const searchKeyword = searchParams.q?.trim() ?? '';
-  const statusFilter = (searchParams.status ?? 'all') as 'all' | 'answered' | 'pending';
+  const page = Math.max(Number(params.page ?? '1') || 1, 1);
+  const searchKeyword = params.q?.trim() ?? '';
+  const statusFilter = (params.status ?? 'all') as 'all' | 'answered' | 'pending';
 
   const [metrics, { items, total }] = await Promise.all([
     getPrayerAdminMetrics(),

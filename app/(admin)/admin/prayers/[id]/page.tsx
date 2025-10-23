@@ -9,15 +9,16 @@ import { formatDate } from '@/lib/utils/date';
 import { deletePrayerAdminAction, togglePrayerAnsweredAction } from '@/app/(admin)/admin/prayers/actions';
 
 type AdminPrayerDetailPageProps = {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 };
 
 export default async function AdminPrayerDetailPage({ params }: AdminPrayerDetailPageProps) {
   const language = await detectInitialLanguage();
+  const { id } = await params;
 
-  const prayer = await getPrayerById(params.id);
+  const prayer = await getPrayerById(id);
 
   if (!prayer) {
     notFound();

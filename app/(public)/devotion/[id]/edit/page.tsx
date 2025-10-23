@@ -8,26 +8,27 @@ import { isAdmin } from '@/lib/auth/utils';
 import type { DevotionUpdateValues } from '@/lib/validators/devotion';
 
 type DevotionEditPageProps = {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 };
 
 export default async function DevotionEditPage({ params }: DevotionEditPageProps) {
   const profile = await getCurrentProfile();
+  const { id } = await params;
 
   if (!profile) {
-    redirect(`/login?redirectTo=/devotion/${params.id}/edit`);
+    redirect(`/login?redirectTo=/devotion/${id}/edit`);
   }
 
-  const devotion = await getDevotionById(params.id);
+  const devotion = await getDevotionById(id);
 
   if (!devotion) {
     notFound();
   }
 
   if (devotion.authorId !== profile.id && !isAdmin(profile.role)) {
-    redirect(`/devotion/${params.id}`);
+    redirect(`/devotion/${id}`);
   }
 
   const initialValues: DevotionUpdateValues = {

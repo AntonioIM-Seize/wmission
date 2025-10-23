@@ -6,11 +6,11 @@ import { Separator } from '@/components/ui/separator';
 import { LoginForm } from '@/components/forms/login-form';
 
 type LoginPageProps = {
-  searchParams: {
+  searchParams: Promise<{
     redirectTo?: string;
     registered?: string;
     notice?: string;
-  };
+  }>;
 };
 
 export const metadata: Metadata = {
@@ -25,10 +25,11 @@ function sanitizeRedirectPath(path?: string) {
   return path;
 }
 
-export default function LoginPage({ searchParams }: LoginPageProps) {
-  const redirectTo = sanitizeRedirectPath(searchParams.redirectTo);
-  const registered = searchParams.registered === '1';
-  const pendingNotice = searchParams.notice === 'pending';
+export default async function LoginPage({ searchParams }: LoginPageProps) {
+  const params = await searchParams;
+  const redirectTo = sanitizeRedirectPath(params.redirectTo);
+  const registered = params.registered === '1';
+  const pendingNotice = params.notice === 'pending';
 
   return (
     <div className="space-y-6">

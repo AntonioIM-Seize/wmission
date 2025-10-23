@@ -9,15 +9,16 @@ import { formatDate } from '@/lib/utils/date';
 import { deleteDevotionAdminAction } from '@/app/(admin)/admin/devotions/actions';
 
 type AdminDevotionDetailPageProps = {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 };
 
 export default async function AdminDevotionDetailPage({ params }: AdminDevotionDetailPageProps) {
   const language = await detectInitialLanguage();
+  const { id } = await params;
 
-  const devotion = await getDevotionById(params.id);
+  const devotion = await getDevotionById(id);
 
   if (!devotion) {
     notFound();

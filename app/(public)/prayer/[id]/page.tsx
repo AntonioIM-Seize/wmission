@@ -17,13 +17,14 @@ import { formatDate } from '@/lib/utils/date';
 import { stripHtml, truncateText } from '@/lib/utils/text';
 
 type PrayerDetailPageProps = {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 };
 
 export async function generateMetadata({ params }: PrayerDetailPageProps): Promise<Metadata> {
-  const prayer = await getPrayerById(params.id);
+  const { id } = await params;
+  const prayer = await getPrayerById(id);
 
   if (!prayer) {
     return {
@@ -72,8 +73,9 @@ export async function generateMetadata({ params }: PrayerDetailPageProps): Promi
 export default async function PrayerDetailPage({ params }: PrayerDetailPageProps) {
   const language = await detectInitialLanguage();
   const profile = await getCurrentProfile();
+  const { id } = await params;
 
-  const prayer = await getPrayerById(params.id);
+  const prayer = await getPrayerById(id);
 
   if (!prayer) {
     notFound();

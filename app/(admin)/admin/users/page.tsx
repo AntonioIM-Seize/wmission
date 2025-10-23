@@ -16,16 +16,17 @@ const STATUS_OPTIONS = [
 ];
 
 type AdminUsersPageProps = {
-  searchParams: {
+  searchParams: Promise<{
     q?: string;
     status?: string;
-  };
+  }>;
 };
 
 export default async function AdminUsersPage({ searchParams }: AdminUsersPageProps) {
-  const search = searchParams.q?.trim() ?? '';
-  const statusParam = STATUS_OPTIONS.some((option) => option.value === searchParams.status)
-    ? (searchParams.status as typeof STATUS_OPTIONS[number]['value'])
+  const params = await searchParams;
+  const search = params.q?.trim() ?? '';
+  const statusParam = STATUS_OPTIONS.some((option) => option.value === params.status)
+    ? (params.status as typeof STATUS_OPTIONS[number]['value'])
     : 'all';
 
   const statusFilter: ProfileStatus | null =

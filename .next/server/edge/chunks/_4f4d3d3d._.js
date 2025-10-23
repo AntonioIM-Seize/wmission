@@ -1,3 +1,0 @@
-(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["chunks/_4f4d3d3d._.js",12894,e=>{"use strict";e.s(["Headers",()=>h,"Request",()=>l,"Response",()=>d,"default",()=>n,"fetch",()=>s]);var t="undefined"!=typeof self?self:e.g;let s=t.fetch,n=t.fetch.bind(t),h=t.Headers,l=t.Request,d=t.Response},32442,(e,t,s)=>{self._ENTRIES||={};let n=Promise.resolve().then(()=>e.i(42738));n.catch(()=>{}),self._ENTRIES.middleware_middleware=new Proxy(n,{get(e,t){if("then"===t)return(t,s)=>e.then(t,s);let s=(...s)=>e.then(e=>(0,e[t])(...s));return s.then=(s,n)=>e.then(e=>e[t]).then(s,n),s}})}]);
-
-//# sourceMappingURL=_4f4d3d3d._.js.map

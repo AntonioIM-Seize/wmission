@@ -19,14 +19,15 @@ const STATUS_OPTIONS = [
 type StatusFilter = (typeof STATUS_OPTIONS)[number]['value'];
 
 type AdminInquiriesPageProps = {
-  searchParams: {
+  searchParams: Promise<{
     status?: string;
-  };
+  }>;
 };
 
 export default async function AdminInquiriesPage({ searchParams }: AdminInquiriesPageProps) {
-  const statusParam = STATUS_OPTIONS.some((option) => option.value === searchParams.status)
-    ? (searchParams.status as StatusFilter)
+  const params = await searchParams;
+  const statusParam = STATUS_OPTIONS.some((option) => option.value === params.status)
+    ? (params.status as StatusFilter)
     : 'all';
 
   const supabase = await createSupabaseServerClient();

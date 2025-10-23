@@ -32,18 +32,19 @@ export const metadata: Metadata = {
 };
 
 type DevotionListPageProps = {
-  searchParams: {
+  searchParams: Promise<{
     page?: string;
     q?: string;
-  };
+  }>;
 };
 
 export default async function DevotionListPage({ searchParams }: DevotionListPageProps) {
   const language = await detectInitialLanguage();
   const profile = await getCurrentProfile();
+  const params = await searchParams;
 
-  const page = Math.max(Number(searchParams.page ?? '1') || 1, 1);
-  const query = searchParams.q?.trim() || null;
+  const page = Math.max(Number(params.page ?? '1') || 1, 1);
+  const query = params.q?.trim() || null;
 
   const { items, total } = await getDevotionsList({
     page,
