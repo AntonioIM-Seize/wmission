@@ -7,109 +7,115 @@ import type { Database } from '@/types/supabase';
 const APPROVED_ONLY_PATHS = ['/devotion/write'];
 
 export async function middleware(request: NextRequest) {
-  const response = NextResponse.next();
-  
-  // 환경 변수 확인
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  try {
+    const response = NextResponse.next();
+    
+    // 환경 변수 확인
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-  if (!supabaseUrl || !supabaseAnonKey) {
-    console.error('Missing Supabase environment variables');
+    if (!supabaseUrl || !supabaseAnonKey) {
+      console.error('Missing Supabase environment variables');
+      return response;
+    }
+    
+    // Supabase 클라이언트 생성
+    const supabase = createServerClient<Database>(
+      supabaseUrl,
+      supabaseAnonKey,
+      {
+        cookies: {
+          getAll() {
+            return request.cookies.getAll()
+          },
+          setAll(cookiesToSet) {
+            cookiesToSet.forEach(({ name, value }) => {
+              request.cookies.set(name, value)
+            })
+            cookiesToSet.forEach(({ name, value, options }) => {
+              response.cookies.set(name, value, options)
+            })
+          },
+        },
+      }
+    );
+
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
+    const pathname = request.nextUrl.pathname;
+
+    // Admin 페이지 보호
+    if (pathname.startsWith('/admin')) {
+      if (!session) {
+        const redirectUrl = request.nextUrl.clone();
+        redirectUrl.pathname = '/login';
+        redirectUrl.searchParams.set('redirectTo', pathname);
+        return NextResponse.redirect(redirectUrl);
+      }
+
+      try {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', session.user.id)
+          .single();
+
+        if (!profile || (profile as any).role !== 'admin') {
+          const redirectUrl = request.nextUrl.clone();
+          redirectUrl.pathname = '/';
+          return NextResponse.redirect(redirectUrl);
+        }
+      } catch (error) {
+        console.error('Error checking admin role:', error);
+        const redirectUrl = request.nextUrl.clone();
+        redirectUrl.pathname = '/';
+        return NextResponse.redirect(redirectUrl);
+      }
+    }
+
+    // 승인된 사용자만 접근 가능한 경로
+    if (APPROVED_ONLY_PATHS.includes(pathname)) {
+      if (!session) {
+        const redirectUrl = request.nextUrl.clone();
+        redirectUrl.pathname = '/login';
+        redirectUrl.searchParams.set('redirectTo', pathname);
+        return NextResponse.redirect(redirectUrl);
+      }
+
+      try {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('status')
+          .eq('id', session.user.id)
+          .single();
+
+        if (!profile || (profile as any).status !== 'approved') {
+          const redirectUrl = request.nextUrl.clone();
+          redirectUrl.pathname = '/';
+          redirectUrl.searchParams.set('notice', 'pending');
+          return NextResponse.redirect(redirectUrl);
+        }
+      } catch (error) {
+        console.error('Error checking user status:', error);
+        const redirectUrl = request.nextUrl.clone();
+        redirectUrl.pathname = '/';
+        return NextResponse.redirect(redirectUrl);
+      }
+    }
+
+    // 기본 보안 헤더만 적용
+    response.headers.set('x-content-type-options', 'nosniff');
+    response.headers.set('x-frame-options', 'DENY');
+    response.headers.set('referrer-policy', 'strict-origin-when-cross-origin');
+
     return response;
+  } catch (error) {
+    // 미들웨어 전체 에러 처리
+    console.error('Middleware error:', error);
+    return NextResponse.next();
   }
-  
-  // Supabase 클라이언트 생성
-  const supabase = createServerClient<Database>(
-    supabaseUrl,
-    supabaseAnonKey,
-    {
-      cookies: {
-        getAll() {
-          return request.cookies.getAll()
-        },
-        setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value }) => {
-            request.cookies.set(name, value)
-          })
-          cookiesToSet.forEach(({ name, value, options }) => {
-            response.cookies.set(name, value, options)
-          })
-        },
-      },
-    }
-  );
-
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
-
-  const pathname = request.nextUrl.pathname;
-
-  // Admin 페이지 보호
-  if (pathname.startsWith('/admin')) {
-    if (!session) {
-      const redirectUrl = request.nextUrl.clone();
-      redirectUrl.pathname = '/login';
-      redirectUrl.searchParams.set('redirectTo', pathname);
-      return NextResponse.redirect(redirectUrl);
-    }
-
-    try {
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('role')
-        .eq('id', session.user.id)
-        .single();
-
-      if (!profile || (profile as any).role !== 'admin') {
-        const redirectUrl = request.nextUrl.clone();
-        redirectUrl.pathname = '/';
-        return NextResponse.redirect(redirectUrl);
-      }
-    } catch (error) {
-      console.error('Error checking admin role:', error);
-      const redirectUrl = request.nextUrl.clone();
-      redirectUrl.pathname = '/';
-      return NextResponse.redirect(redirectUrl);
-    }
-  }
-
-  // 승인된 사용자만 접근 가능한 경로
-  if (APPROVED_ONLY_PATHS.includes(pathname)) {
-    if (!session) {
-      const redirectUrl = request.nextUrl.clone();
-      redirectUrl.pathname = '/login';
-      redirectUrl.searchParams.set('redirectTo', pathname);
-      return NextResponse.redirect(redirectUrl);
-    }
-
-    try {
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('status')
-        .eq('id', session.user.id)
-        .single();
-
-      if (!profile || (profile as any).status !== 'approved') {
-        const redirectUrl = request.nextUrl.clone();
-        redirectUrl.pathname = '/';
-        redirectUrl.searchParams.set('notice', 'pending');
-        return NextResponse.redirect(redirectUrl);
-      }
-    } catch (error) {
-      console.error('Error checking user status:', error);
-      const redirectUrl = request.nextUrl.clone();
-      redirectUrl.pathname = '/';
-      return NextResponse.redirect(redirectUrl);
-    }
-  }
-
-  // 기본 보안 헤더만 적용
-  response.headers.set('x-content-type-options', 'nosniff');
-  response.headers.set('x-frame-options', 'DENY');
-  response.headers.set('referrer-policy', 'strict-origin-when-cross-origin');
-
-  return response;
 }
 
 export const config = {
