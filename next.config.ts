@@ -1,4 +1,5 @@
 import type { NextConfig } from 'next';
+import * as webpackModule from 'next/dist/compiled/webpack/webpack';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseHostname = supabaseUrl ? new URL(supabaseUrl).hostname : undefined;
@@ -15,6 +16,18 @@ const nextConfig: NextConfig = {
         ],
       }
     : undefined,
+  webpack(config, { nextRuntime }) {
+    if (nextRuntime === 'edge') {
+      webpackModule.init();
+      config.plugins = config.plugins ?? [];
+      config.plugins.push(
+        new webpackModule.webpack.DefinePlugin({
+          __dirname: JSON.stringify('/'),
+        }),
+      );
+    }
+    return config;
+  },
 };
 
 export default nextConfig;
