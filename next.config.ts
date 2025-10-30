@@ -16,8 +16,9 @@ const nextConfig: NextConfig = {
         ],
       }
     : undefined,
-  webpack(config, { nextRuntime }) {
-    if (nextRuntime === 'edge') {
+  webpack(config, options) {
+    const isEdge = options.nextRuntime === 'edge' || Boolean((options as { middleware?: boolean }).middleware);
+    if (isEdge) {
       webpackModule.init();
       config.plugins = config.plugins ?? [];
       config.plugins.push(
